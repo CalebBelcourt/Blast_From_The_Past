@@ -23,6 +23,17 @@ public class Rocket : MonoBehaviour {
         Rotate();
     }
 
+    void OnCollisionEnter(Collision collision) {
+        switch (collision.gameObject.tag) {
+            case "Friendly":    // safe collision
+                print("OK");
+                break;
+            default:    // death on collision
+                print("Dead");
+                break;
+        }
+    }
+
     private void Thrust() {
         if (Input.GetKey(KeyCode.Space)) {
             rigidBody.AddRelativeForce(Vector3.up * mainThrust);
