@@ -5,6 +5,9 @@ public class Rocket : MonoBehaviour {
 
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 100f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip death;
+    [SerializeField] AudioClip success;
 
     Rigidbody rigidBody;
     AudioSource audioSource;
@@ -21,8 +24,8 @@ public class Rocket : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         if (state == State.Alive) {
-            Thrust();
-            Rotate();
+            RespondToThrustInput();
+            RespondToRotateInput();
         }
     }
 
@@ -36,10 +39,12 @@ public class Rocket : MonoBehaviour {
             case "Finish":    // next level
                 state = State.Transcending;
                 Invoke("LoadNextLevel", 1f);
+                audioSource.PlayOneShot(success);
                 break;
             default:    // death on collision
                 state = State.Dying;
                 Invoke("LoadFirstLevel", 1f);
+                audioSource.PlayOneShot(death);
                 break;
         }
     }
@@ -52,18 +57,23 @@ public class Rocket : MonoBehaviour {
         SceneManager.LoadScene(0);
     }
 
-    private void Thrust() {
+    private void RespondToThrustInput() {
         if (Input.GetKey(KeyCode.Space)) {
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
-            if (!audioSource.isPlaying) {
-                audioSource.Play();
-            }
-        } else {
+            ApplyThrust();
+        }
+        else {
             audioSource.Stop();
         }
     }
 
-    private void Rotate() {
+    private void ApplyThrust() {
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        if (!audioSource.isPlaying) {
+            audioSource.PlayOneShot(mainEngine);
+        }
+    }
+
+    private void RespondToRotateInput() {
         rigidBody.freezeRotation = true;    // take manual control of rotation
 
         float rotationThisFrame = rcsThrust * Time.deltaTime;
