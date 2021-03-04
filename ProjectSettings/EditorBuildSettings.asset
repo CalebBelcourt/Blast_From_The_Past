@@ -50,4 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Beach/Level 11.unity
     guid: 5b85c48d5e3f0f248ad7d79420ef03c2
+  - enabled: 1
+    path: Assets/Scenes/Beach/Level 12.unity
+    guid: c4d65b57c5453da49b1a24395a3d1ad9
   m_configObjects: {}
